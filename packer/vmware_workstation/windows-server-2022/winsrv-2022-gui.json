@@ -1,0 +1,72 @@
+{
+    "builders": [
+        {
+            "type": "vmware-iso",
+            "guest_os_type": "windows2019srv-64",
+            "vm_name":"winsrv-2022-template",
+            "boot_command": "<spacebar>",
+            "boot_wait": "3s",
+            "disk_size": "40960",
+            "disk_type_id": "0",
+            "headless": false,
+            "iso_checksum": "none",
+            "iso_url": "PATH-TO-ISO/Windows-Server-2022.iso",
+            "output_directory": "PATH-TO-OUTPUT/WS-2022-Build",
+            "communicator":"winrm",
+            "winrm_username": "Administrator",
+            "winrm_password": "packer",
+            "winrm_use_ssl": true,
+            "winrm_insecure": true,
+            "winrm_timeout": "4h",
+            "floppy_files": ["scripts/uefi/gui/autounattend.xml"],
+            "shutdown_command": "shutdown /s /t 5 /f /d p:4:1 /c \"Packer Shutdown\"",
+            "shutdown_timeout": "30m",
+            "skip_compaction": false,
+            "network": "VMnet8",
+            "vmx_data": {
+                "memsize": "4096",
+                "numvcpus": "2",
+                "virtualHW.version": "14",
+                "firmware": "efi",
+                "scsi0.virtualDev": "lsisas1068"
+            }
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "powershell",
+            "only": ["vmware-iso"],
+            "scripts": ["scripts/vmware-tools.ps1"],
+            "pause_before": "1m"
+        },
+        {
+            "type": "powershell",
+            "scripts": ["scripts/setup.ps1"]
+        },
+        {
+            "type": "windows-restart",
+            "restart_timeout": "30m"
+        },
+        {
+            "type": "powershell",
+            "scripts": ["scripts/win-update.ps1"]
+        },
+        {
+            "type": "windows-restart",
+            "restart_timeout": "30m"
+        },
+        {
+            "type": "powershell",
+            "scripts": ["scripts/win-update.ps1"]
+        },
+        {
+            "type": "windows-restart",
+            "restart_timeout": "30m"
+        },
+        {
+            "type": "powershell",
+            "scripts": ["scripts/cleanup.ps1"],
+            "pause_before": "1m"
+        }
+    ]
+}
