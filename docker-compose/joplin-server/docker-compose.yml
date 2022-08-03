@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+    app:
+        environment:
+            - APP_BASE_URL=YOUR-URL-HERE
+            - APP_PORT=22300
+            - POSTGRES_PASSWORD=joplin_pw
+            - POSTGRES_DATABASE=joplin
+            - POSTGRES_USER=joplin
+            - POSTGRES_PORT=5432
+            - POSTGRES_HOST=db
+            - DB_CLIENT=pg
+        restart: unless-stopped
+        image: florider89/joplin-server:latest
+        networks:
+            - internal
+            - traefik_default
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.joplin.rule=Host(`YOUR-URL-HERE`)"
+            - "traefik.http.routers.joplin.entrypoints=websecure"
+            - "traefik.http.routers.joplin.tls=true"
+            - "traefik.http.routers.joplin.tls.certresolver=myresolver"
+            - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto = http"
+            - "traefik.http.routers.joplin.service=joplin-server"
+            - "traefik.http.services.joplin-server.loadbalancer.passhostheader=true"
+            - "traefik.http.services.joplin-server.loadbalancer.server.port=22300"
+            - "traefik.docker.network=traefik_default"
+    db:
+        restart: unless-stopped
+        image: postgres:13.1
+        networks:
+            - internal
+        volumes:
+            - ./db:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_PASSWORD=joplin_pw
+            - POSTGRES_USER=joplin
+            - POSTGRES_DB=joplin
+networks:
+  internal:
+    internal: true
+  traefik_default:
+    external: true
