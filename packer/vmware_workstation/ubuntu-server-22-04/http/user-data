@@ -1,0 +1,28 @@
+#cloud-config
+
+# Ubuntu Server 22.04 LTS
+autoinstall:
+  version: 1
+  early-commands:
+     - sudo systemctl stop ssh
+  locale: de_DE
+  keyboard:
+    layout: de
+  identity:
+    hostname: ubuntu-22-04-server
+    username: ubuntu
+    password: "$6$exDY1mhS4KUYCE/2$zmn9ToZwTKLhCw.b4/b.ZRTIZM30JZ4QrOQ2aOXJ8yk96xpcCof0kxKwuX1kqLG/ygbJ1f8wxED22bTL4F46P0" #ubuntu
+  ssh:
+    install-server: true
+    allow-pw: true
+  packages:
+     - sudo
+     - open-vm-tools
+  storage:
+    layout:
+      name: direct
+  user-data:
+    disable_root: false
+    timezone: Europe/Berlin
+  late-commands:
+      - echo 'ubuntu ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/ubuntu
