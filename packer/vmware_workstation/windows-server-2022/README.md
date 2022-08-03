@@ -18,7 +18,9 @@ Während der Templateerstellung werden einige Scripte ausgeführt. Diese install
 In der ***winsrv-2022-gui.json*** müssen folgende Parameter angepasst werden:
 
 ***"iso_url"*** - Pfad zur ISO Datei
+
 ***"output_directory"*** - Pfad zum Speicherort des erzeugten Templates
+
 ***"network"*** - Euer in VMware Workstation verwendetes Netzwerk
 
 ## Wie startet man die Images-Erzeugung
