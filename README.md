@@ -7,4 +7,6 @@ Die Daten dienen als Anregung für eigene Projekte und Ideen.
 
 ## Sektionen
 
+[Docker-Compose](https://github.com/ctstec/boilerplates/tree/main/docker-compose) - Templaes für dei Verwendung mit Docker-Compose.
+
 [Packer](https://github.com/ctstec/boilerplates/tree/main/packer) - Verwalten von VM Templates.
